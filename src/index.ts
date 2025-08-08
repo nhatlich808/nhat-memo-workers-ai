@@ -25,7 +25,7 @@ export default {
 		if (request.method === 'POST') {
 			try {
 				const data = await request.json();
-				const response = await env.AI.run("@cf/google/gemma-7b-it-lora", {
+				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
 					prompt: data.message,
 				});
 				return new Response( JSON.stringify(response),
