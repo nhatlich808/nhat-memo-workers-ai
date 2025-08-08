@@ -24,11 +24,17 @@ export default {
 
 		if (request.method === 'POST') {
 			try {
+				
 				const data = await request.json();
-				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", {
-					prompt: data.message,
-					max_tokens: 128000
-				});
+				const messages = [
+					{ role: "system", content: "Your name is Lorda. You are an assistant for NHAT-MEMO app, and you're very friendly." },
+					{
+						role: "user",
+						content: data.message,
+						max_tokens: 25600
+					},
+				];
+				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", { messages });
 				return new Response( JSON.stringify(response),
 					{
 						status: 200,
@@ -39,7 +45,7 @@ export default {
 					}
 				);
 			} catch (err) {
-				return new Response('Invalid JSON', {
+				return new Response(JSON.stringify(err), {
 					status: 400,
 					headers: {
 						...corsHeaders
