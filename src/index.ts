@@ -6,6 +6,12 @@ export interface Env {
 
 export default {
   async fetch(request, env): Promise<Response> {
+		const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+      "Access-Control-Max-Age": "86400",
+    };
+
 		if (request.method === 'POST') {
 			try {
 				const data = await request.json();
@@ -15,13 +21,22 @@ export default {
 				return new Response( JSON.stringify(response),
 					{
 						status: 200,
-						headers: { 'Content-Type': 'application/json' }
+						headers: {
+							...corsHeaders,
+							'Content-Type': 'application/json'
+						}
 					}
 				);
 			} catch (err) {
-				return new Response('Invalid JSON', { status: 400 })
+				return new Response('Invalid JSON', {
+					...corsHeaders,
+					status: 400
+				})
 			}
 		}
-    return new Response('Only POST allow', { status: 405 });
+    return new Response('Only POST allow', {
+			...corsHeaders,
+			status: 405
+		});
   },
 } satisfies ExportedHandler<Env>;
