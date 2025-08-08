@@ -26,21 +26,26 @@ export default {
 			try {
 				
 				const data = await request.json();
+				const promptMessage = `Give me a quick response to the '${data.message}' prompt.`;
 				const messages = [
 					{ role: "system", content: "Your name is Lorda. You are an assistant for NHAT-MEMO app, and you're very friendly." },
 					{
 						role: "user",
-						content: data.message,
-						max_tokens: 25600
+						content: promptMessage,
+						stream: true,
+						max_tokens: 256
 					},
 				];
-				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", { messages });
-				return new Response( JSON.stringify(response),
+				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", {
+					messages,
+        	stream: true,
+				});
+				return new Response( response,
 					{
 						status: 200,
 						headers: {
 							...corsHeaders,
-							'Content-Type': 'application/json'
+							'Content-Type': 'text/event-stream'
 						}
 					}
 				);
