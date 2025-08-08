@@ -12,6 +12,15 @@ export default {
       "Access-Control-Max-Age": "86400",
     };
 
+		if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          ...corsHeaders
+        },
+      });
+    }
+
 		if (request.method === 'POST') {
 			try {
 				const data = await request.json();
@@ -29,14 +38,18 @@ export default {
 				);
 			} catch (err) {
 				return new Response('Invalid JSON', {
-					...corsHeaders,
-					status: 400
+					status: 400,
+					headers: {
+						...corsHeaders
+					}
 				})
 			}
 		}
     return new Response('Only POST allow', {
-			...corsHeaders,
-			status: 405
+			status: 405,
+			headers: {
+				...corsHeaders
+			}
 		});
   },
 } satisfies ExportedHandler<Env>;
