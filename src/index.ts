@@ -25,8 +25,9 @@ export default {
 		if (request.method === 'POST') {
 			try {
 				const data = await request.json();
-				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+				const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", {
 					prompt: data.message,
+					max_tokens: 128000
 				});
 				return new Response( JSON.stringify(response),
 					{
